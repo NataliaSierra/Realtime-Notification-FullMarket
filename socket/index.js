@@ -8,22 +8,22 @@ const io = new Server({
 
 let onlineUsers = [];
 
-const addNewUser = (username, socketId) => {
-  !onlineUsers.some((user) => user.username === username) &&
-    onlineUsers.push({ username, socketId });
+const addNewUser = (alias, socketId) => {
+  !onlineUsers.some((user) => user.alias === alias) &&
+    onlineUsers.push({ alias, socketId });
 };
 
 const removeUser = (socketId) => {
   onlineUsers = onlineUsers.filter((user) => user.socketId !== socketId);
 };
 
-const getUser = (username) => {
-  return onlineUsers.find((user) => user.username === username);
+const getUser = (alias) => {
+  return onlineUsers.find((user) => user.alias === alias);
 };
 
 io.on("connection", (socket) => {
-  socket.on("newUser", (username) => {
-    addNewUser(username, socket.id);
+  socket.on("newUser", (alias) => {
+    addNewUser(alias, socket.id);
   });
 
   socket.on("sendNotification", ({ senderName, receiverName, type }) => {

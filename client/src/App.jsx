@@ -6,22 +6,32 @@ import { posts } from "./data";
 import { io } from "socket.io-client";
 
 const App = () => {
-  const [username, setUsername] = useState("");
+  const [alias, setAlias] = useState("");
   const [user, setUser] = useState("");
   const [socket, setSocket] = useState(null);
   const [userApi, setUserApi] = useState("");
 
   const URL = 'https://fullmarket-provitional-backend.herokuapp.com/getallusers';
 
+  // const viewUsers = async () => {
+  //   await fetch(URL)
+  //   .then(res => res.json())
+  //   .then(data => setUserApi(data)) 
+  // }
+
   const viewUsers = async () => {
     await fetch(URL)
     .then(res => res.json())
-    .then(data => setUserApi(console.log(data)) )
+    .then(data => {
+      data.forEach(element => {
+        setUserApi(element)
+      });
+    }) 
   }
   useEffect(() => {
     viewUsers();
   }, []);
-  console.log(userApi);
+   console.log("userAPI",userApi.alias);
 
 
   //Backend URL
@@ -39,19 +49,19 @@ const App = () => {
         <>
           <Navbar socket={socket} />
           {posts.map((post) => (
-            <Card key={post.id} post={post} socket={socket} user={user}/>
+            <Card key={post.uid} post={post} socket={socket} user={user}/>
           ))}
-          <span className="username">{user}</span>
+          <span className="alias">{user}</span>
         </>
       ) : (
         <div className="login">
           <h2>Lama App</h2>
           <input
             type="text"
-            placeholder="username"
-            onChange={(e) => setUsername(e.target.value)}
+            placeholder="alias"
+            onChange={(e) => setAlias(e.target.value)}
           />
-          <button onClick={() => setUser(username)}>Login</button>
+          <button onClick={() => setUser(alias)}>Login</button>
         </div>
       )}
     </div>
