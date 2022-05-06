@@ -2,28 +2,33 @@ import { useEffect, useState } from "react";
 import "./app.css";
 import Card from "./components/card/Card";
 import Navbar from "./components/navbar/Navbar";
-import { posts } from "./data";
 import { io } from "socket.io-client";
+import axios from "axios";
 
 const App = () => {
   const [username, setUsername] = useState("");
   const [user, setUser] = useState("");
   const [socket, setSocket] = useState(null);
-  const [userApi, setUserApi] = useState("");
+  const [userApi, setUserApi] = useState([]);
 
   const URL = 'https://fullmarket-provitional-backend.herokuapp.com/getallusers';
 
-  const viewUsers = async () => {
-    await fetch(URL)
-    .then(res => res.json())
-    .then(data => setUserApi(console.log(data)) )
+  const getallusers = (e) => {
+    axios.get(URL).then(( res => {
+      let users = res.data
+      setUserApi(users)
+    })) .catch(( err => {
+      console.log(err);
+    }))
   }
-  useEffect(() => {
-    viewUsers();
-  }, []);
-  console.log(userApi);
 
-  //xdfsfgsdavgfhsjadmklñfasdhyfashdfas
+  userApi.map(user => {
+    console.log(user);
+  }) 
+
+  useEffect(() => {
+    getallusers()
+  }, [])
   //Backend URL
   useEffect(() => {
     setSocket(io("http://localhost:5000"));
@@ -38,8 +43,8 @@ const App = () => {
       {user ? (
         <>
           <Navbar socket={socket} />
-          {posts.map((post) => (
-            <Card key={post.id} post={post} socket={socket} user={user}/>
+          {userApi.map((user) => (
+            <Card key={user.uid} post={user} socket={socket} user={user}/>
           ))}
           <span className="username">{user}</span>
         </>
