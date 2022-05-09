@@ -13,7 +13,7 @@ const Card = ({ post, socket, user }) => {
     type === 1 && setLiked(true);
     socket.emit("sendNotification", {
       senderName: user,
-      receiverName: post.username,
+      receiverName: post.alias,
       type,
     });
   };
@@ -21,10 +21,10 @@ const Card = ({ post, socket, user }) => {
   return (
     <div className="card">
       <div className="info">
-        <img src={post.userImg} alt="" className="userImg" />
-        <span>{post.fullname}</span>
+        <img src={post.photo} alt="" className="userImg" />
+        <span>{post.name}</span>
       </div>
-      <img src={post.postImg} alt="" className="postImg" />
+      <img src={post.photo} alt="" className="postImg" />
       <div className="interaction">
         {liked ? (
           <img src={HeartFilled} alt="" className="cardIcon" />
