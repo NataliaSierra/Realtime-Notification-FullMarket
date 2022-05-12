@@ -36,12 +36,12 @@ const Navbar = ({ socket }) => {
 
   return (
     <div className="navbar">
-      <span className="logo">Lama App</span>
+      <span className="logo">Notifications</span>
       <div className="icons">
         <div className="icon" onClick={() => setOpen(!open)}>
           <img src={Notification} className="iconImg" alt="" />
           {
-notifications.length >0 &&
+          notifications.length >0 &&
             <div className="counter">{notifications.length}</div>
           }
         </div>
