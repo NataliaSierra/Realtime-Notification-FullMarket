@@ -1,3 +1,4 @@
+import axios from "axios";
 import { Server } from "socket.io";
 
 const io = new Server({
@@ -11,6 +12,8 @@ let onlineUsers = [];
 const addNewUser = (alias, socketId) => {
   !onlineUsers.some((user) => user.alias === alias) &&
     onlineUsers.push({ alias, socketId });
+    console.log(socketId);
+    console.log(alias);
 };
 
 const removeUser = (socketId) => {
@@ -26,7 +29,7 @@ io.on("connection", (socket) => {
     addNewUser(alias, socket.id);
   });
 
-  socket.on("sendNotification", ({ senderName, receiverName, type }) => {
+  socket.once("sendNotification", ({ senderName, receiverName, type }) => {
     const receiver = getUser(receiverName);
     io.to(receiver.socketId).emit("getNotification", {
       senderName,
@@ -34,12 +37,12 @@ io.on("connection", (socket) => {
     });
   });
 
-  socket.on("sendText", ({ senderName, receiverName, text }) => {
+  socket.once("sendText", ({ senderName, receiverName, text }) => {
     const receiver = getUser(receiverName);
     io.to(receiver.socketId).emit("getText", {
       senderName,
       text,
-    });
+    }); 
   });
 
   socket.on("disconnect", () => {
