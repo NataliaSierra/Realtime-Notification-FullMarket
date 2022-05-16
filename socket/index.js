@@ -1,4 +1,5 @@
 import axios from "axios";
+import FormData from 'form-data';
 import { Server } from "socket.io";
 
 const io = new Server({
@@ -30,7 +31,18 @@ io.on("connection", (socket) => {
   });
 
   socket.once("sendNotification", ({ senderName, receiverName, type }) => {
+    var form = new FormData();
     const receiver = getUser(receiverName);
+
+    const SendToDb = async () => {
+      form.append("senderName", 'botsito1')
+      form.append("receiverName", 'a nadie')
+      form.append("typet", 'copio los codigos')
+      axios.post('http://127.0.0.1:5000/trytodb', form).then(( res => {
+        console.log('enviado');
+      }))
+    }
+    SendToDb();
     io.to(receiver.socketId).emit("getNotification", {
       senderName,
       type,
