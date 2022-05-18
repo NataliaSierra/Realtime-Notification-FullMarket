@@ -13,8 +13,15 @@ let onlineUsers = [];
 const addNewUser = (alias, socketId) => {
   !onlineUsers.some((user) => user.alias === alias) &&
     onlineUsers.push({ alias, socketId });
-    console.log(socketId);
-    console.log(alias);
+    var formSendU = new FormData();
+    const SendUserOnline = async () => {
+      formSendU.append("alias", alias)
+      formSendU.append("socketIDU", socketId)
+      axios.post('http://127.0.0.1:5000/postuseronline', formSendU).then(( res => {
+        console.log('NewUsers');
+      }))
+    }
+    SendUserOnline()
 };
 
 const removeUser = (socketId) => {
