@@ -15,7 +15,7 @@ const addNewUser = (alias, socketId) => {
     onlineUsers.push({ alias, socketId });
     var formSendU = new FormData();
     const SendUserOnline = async () => {
-      formSendU.append("alias", alias)
+      formSendU.append("aliasU", alias)
       formSendU.append("socketIDU", socketId)
       axios.post('http://127.0.0.1:5000/postuseronline', formSendU).then(( res => {
         console.log('NewUsers');
@@ -37,19 +37,22 @@ io.on("connection", (socket) => {
     addNewUser(alias, socket.id);
   });
 
-  socket.once("sendNotification", ({ senderName, receiverName, type }) => {
+  socket.once("sendNotification", async ({ senderName, receiverName, type }) => {
     var form = new FormData();
     const receiver = getUser(receiverName);
 
+    const sendname = senderName
+    const receivename = receiverName
+    const typo = type
+
     const SendToDb = async () => {
-      form.append("senderName", 'botsito1')
-      form.append("receiverName", 'a nadie')
-      form.append("typet", 'copio los codigos')
-      axios.post('http://127.0.0.1:5000/trytodb', form).then(( res => {
+      form.append("senderName", sendname)
+      form.append("receiverName", receivename)
+      form.append("typet", typo)
+      await axios.post('http://127.0.0.1:5000/trytodb', form).then(( res => {
         console.log('enviado');
       }))
     }
-    SendToDb();
     io.to(receiver.socketId).emit("getNotification", {
       senderName,
       type,
